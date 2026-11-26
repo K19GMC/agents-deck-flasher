@@ -1,0 +1,40 @@
+name: Debug pages permission
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check token and Pages API
+        run: |
+          set -x
+          echo "== repo =="
+          curl -s -H "Authorization: Bearer ${{ github.token }}" \
+            https://api.github.com/repos/${{ github.repository }} -o repo.json
+          python3 - <<'EOF'
+          import json
+          d = json.load(open("repo.json"))
+          print("private:", d.get("private"))
+          print("visibility:", d.get("visibility"))
+          print("permissions:", d.get("permissions"))
+          EOF
+          echo "== GET /pages =="
+          curl -s -o pages.json -w 'status=%{http_code}\n' -H "Authorization: Bearer ${{ github.token }}" \
+            https://api.github.com/repos/${{ github.repository }}/pages
+          cat pages.json; echo
+          echo "== POST /pages =="
+          curl -s -w '\nstatus=%{http_code}\n' -X POST \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/pages \
+            -d '{"source":{"branch":"main","path":"/"}}'
