@@ -1,8 +1,8 @@
 name: Deploy flasher to Pages
 
-# Prerequisite (one time, by a repo admin — the Actions token cannot create a
-# Pages site): repository Settings -> Pages -> Build and deployment ->
-# Source: GitHub Actions. After that this workflow deploys on every push.
+# Pages is enabled once by a repo admin: Settings -> Pages -> Source: GitHub Actions.
+# This workflow then deploys on every push. Build and deploy are separate jobs so
+# deploy-pages sees the uploaded artifact (it races a same-job upload).
 on:
   push:
     branches: [main]
@@ -18,16 +18,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
