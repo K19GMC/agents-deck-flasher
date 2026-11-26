@@ -1,13 +1,13 @@
 {
   "name": "M5Stack StickS3",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "agents-deck-m5stick-s3-0.1.0.bin",
+          "path": "agents-deck-m5stick-s3-0.1.1.bin",
           "offset": 0
         }
       ]
@@ -15,14 +15,15 @@
   ],
   "agents_deck": {
     "board": "m5stick-s3",
-    "name": "M5Stack StickS3",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "chip": "esp32s3",
-    "chipFamily": "ESP32-S3",
-    "file": "agents-deck-m5stick-s3-0.1.0.bin",
+    "file": "agents-deck-m5stick-s3-0.1.1.bin",
     "offset": "0x0",
-    "size": 529200,
-    "sha256": "348bdae5fddb6fdd5b0f6cb7ac64d6a3819b985f8deea4fd47139150acc665bf",
+    "size": 529232,
+    "sha256": "4ad535dc88a13c259b3d7e6b9f18abf8ee793b0f6f030605a0b23d2a15b06e78",
+    "env": "idf5",
+    "project": "firmware/devices/m5stick-s3/idf5",
+    "name": "M5Stack StickS3",
     "types": [
       "m5stick-s3"
     ],
@@ -34,6 +35,7 @@
     ],
     "flash_size": 8388608,
     "wifi": false,
-    "picture": "img/m5stick-s3.png"
+    "picture": "docs/images/devices/m5stick-s3-running.png",
+    "ota": null
   }
 }

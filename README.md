@@ -9,11 +9,11 @@ browser, over USB. No tools to install.
 
 | Board | Chip | Flash | Connection | Firmware |
 |---|---|---|---|---|
-| M5Stack StickS3 | ESP32-S3 | 8 MB | USB only | 0.1.0 |
+| M5Stack StickS3 | ESP32-S3 | 8 MB | USB only | 0.1.1 |
 
 ## Where the firmware comes from
 
-`firmware/agents-deck-m5stick-s3-0.1.0.bin` is the merged image (bootloader + partition table +
+`firmware/agents-deck-m5stick-s3-0.1.1.bin` is the merged image (bootloader + partition table +
 `boot_app0` + app) built from the **M5Stack StickS3 port** of agents deck, written at `0x0`. The
 `.manifest.json` next to it is an [ESP Web Tools](https://esphome.github.io/esp-web-tools/) manifest;
 `firmware-manifest.json` is the list the page reads to draw the board cards.
@@ -35,8 +35,8 @@ To add a board, drop its merged `.bin` and manifest into `firmware/` and add an 
 index.html                     the flasher page (static)
 firmware-manifest.json         the board list the page reads
 firmware/
-  agents-deck-m5stick-s3-0.1.0.bin           merged image, flashed at 0x0
-  agents-deck-m5stick-s3-0.1.0.manifest.json ESP Web Tools manifest
+  agents-deck-m5stick-s3-0.1.1.bin           merged image, flashed at 0x0
+  agents-deck-m5stick-s3-0.1.1.manifest.json ESP Web Tools manifest
 img/                           board picture
 ```
 
