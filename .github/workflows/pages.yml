@@ -1,5 +1,8 @@
 name: Deploy flasher to Pages
 
+# Prerequisite (one time, by a repo admin — the Actions token cannot create a
+# Pages site): repository Settings -> Pages -> Build and deployment ->
+# Source: GitHub Actions. After that this workflow deploys on every push.
 on:
   push:
     branches: [main]
@@ -23,8 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
