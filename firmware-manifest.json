@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "boards": [
+    {
+      "name": "M5Stack StickS3",
+      "board": "m5stick-s3",
+      "chipFamily": "ESP32-S3",
+      "manifest": "agents-deck-m5stick-s3-0.1.0.manifest.json",
+      "version": "0.1.0",
+      "chip": "esp32s3",
+      "file": "agents-deck-m5stick-s3-0.1.0.bin",
+      "offset": "0x0",
+      "size": 529200,
+      "sha256": "348bdae5fddb6fdd5b0f6cb7ac64d6a3819b985f8deea4fd47139150acc665bf",
+      "types": [
+        "m5stick-s3"
+      ],
+      "usb": [
+        {
+          "vid": "303a",
+          "pid": "1001"
+        }
+      ],
+      "flash_size": 8388608,
+      "wifi": false,
+      "picture": "img/m5stick-s3.png"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agents deck — flash a board</title>
+<meta name="description" content="Flash agents deck firmware to a supported ESP32-S3 board from your browser, over USB.">
+<link rel="icon" href="img/m5stick-s3.png">
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b22;
+    --panel-2: #1c232d;
+    --line: #2b333d;
+    --text: #e6edf3;
+    --muted: #97a3b4;
+    --accent: #4cc2ff;
+    --accent-2: #7cf0c0;
+    --radius: 14px;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 50% -200px, #17202b, var(--bg));
+    color: var(--text);
+    font: 16px/1.55 var(--sans);
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 40px 20px 72px; }
+  header.hero { text-align: center; margin-bottom: 8px; }
+  header.hero h1 { font-size: clamp(28px, 5vw, 42px); margin: 0 0 10px; letter-spacing: -0.02em; }
+  header.hero p { color: var(--muted); margin: 0 auto; max-width: 640px; }
+  .pill {
+    display: inline-block; margin-top: 16px; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+    font-size: 13px;
+  }
+  .notice {
+    margin: 28px 0; padding: 14px 16px; border-radius: var(--radius);
+    border: 1px solid #6b4a12; background: #241a08; color: #ffd79a; font-size: 14px;
+  }
+  .notice strong { color: #ffbe5c; }
+  h2.section { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 36px 0 14px; }
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .card .top { display: flex; gap: 14px; align-items: center; }
+  .card img.board { width: 56px; height: 84px; object-fit: contain; background: #0a0d12; border-radius: 8px; border: 1px solid var(--line); padding: 4px; }
+  .card h3 { margin: 0 0 4px; font-size: 18px; }
+  .card .sub { color: var(--muted); font-size: 13px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    border: 1px solid var(--line); background: var(--panel-2); border-radius: 6px; padding: 3px 8px;
+  }
+  .hash { font-family: var(--mono); font-size: 11px; color: #6f7b8a; word-break: break-all; }
+  esp-web-install-button { display: block; margin-top: auto; }
+  esp-web-install-button button, .install-btn {
+    width: 100%; cursor: pointer; font: 600 15px var(--sans); color: #06121b;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    border: 0; border-radius: 10px; padding: 12px 16px;
+  }
+  esp-web-install-button button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .fallback { color: var(--muted); font-size: 13px; }
+  ol.steps { color: var(--muted); padding-left: 20px; }
+  ol.steps li { margin: 6px 0; }
+  footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 13px; }
+  .loading { color: var(--muted); }
+  .err { color: #ff9b9b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>agents deck — web flasher</h1>
+    <p>Write agents deck firmware to a supported board over USB, straight from your browser. Nothing to install.</p>
+    <span class="pill">Chrome or Edge on desktop · Web Serial</span>
+  </header>
+
+  <div id="unsupported" class="notice" hidden>
+    <strong>This browser can't flash boards.</strong>
+    Flashing uses Web Serial, which Chrome and Edge have on desktop. Open this page in one of those over
+    <code>https</code>, on the computer the board is plugged into.
+  </div>
+
+  <h2 class="section">Boards</h2>
+  <div id="boards" class="grid">
+    <p class="loading">Loading boards…</p>
+  </div>
+
+  <h2 class="section">How to flash</h2>
+  <ol class="steps">
+    <li>Plug the board into this computer with a <strong>USB-C data cable</strong> (not a charge-only one).</li>
+    <li>Click <strong>Install</strong> on your board.</li>
+    <li>In the browser's port picker, choose the board's USB port (usually <span class="tag">USB JTAG/serial</span> or <span class="tag">USB Single Serial</span>).</li>
+    <li>Leave it connected until it finishes — about a minute. The board restarts into agents deck when it's done.</li>
+  </ol>
+  <p class="fallback">
+    Nothing happens when you click Install? Another program may hold the port — close any serial monitor,
+    and make sure agents deck isn't using the board. If the board doesn't answer, hold <strong>BOOT</strong>,
+    tap <strong>RST</strong>, release BOOT, then try again.
+  </p>
+
+  <footer>
+    <p>
+      Firmware built from <a href="https://github.com/brushknight/agents-deck">brushknight/agents-deck</a>
+      with an M5Stack StickS3 device port.
+      Images are written at <code>0x0</code> (bootloader + partition table + app). Over Web Serial only.
+    </p>
+    <p>Flasher page hosted on GitHub Pages. Everything on this page is static; nothing is sent to a server.</p>
+  </footer>
+</div>
+
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+<script>
+  const supported = "serial" in navigator && window.isSecureContext;
+  if (!supported) document.getElementById("unsupported").hidden = false;
+
+  async function main() {
+    const box = document.getElementById("boards");
+    try {
+      const res = await fetch("firmware-manifest.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const index = await res.json();
+      const boards = index.boards || [];
+      if (!boards.length) throw new Error("no boards in firmware-manifest.json");
+      box.innerHTML = "";
+      for (const b of boards) {
+        box.appendChild(card(b));
+      }
+    } catch (e) {
+      box.innerHTML = '<p class="err">Could not load the board list (' + e.message + ').</p>';
+    }
+  }
+
+  function card(b) {
+    const el = document.createElement("div");
+    el.className = "card";
+    const flashMB = b.flash_size ? Math.round(b.flash_size / (1024 * 1024)) + " MB flash" : "";
+    const conn = b.wifi ? "Wi-Fi or USB" : "USB only";
+    const manifest = "firmware/" + b.manifest;
+    const pic = b.picture || "";
+    const hash = (b.sha256 || "").slice(0, 16);
+    el.innerHTML = `
+      <div class="top">
+        ${pic ? `<img class="board" src="${pic}" alt="">` : ""}
+        <div>
+          <h3>${escapeHtml(b.name)}</h3>
+          <div class="sub">${escapeHtml(b.chipFamily || b.chip || "")} · ${escapeHtml(conn)}</div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="tag">${escapeHtml(b.board)}</span>
+        ${flashMB ? `<span class="tag">${flashMB}</span>` : ""}
+        <span class="tag">v${escapeHtml(b.version)}</span>
+      </div>
+      <esp-web-install-button manifest="${manifest}"${supported ? "" : " disabled"}>
+        <button slot="activate" class="install-btn">Install agents deck</button>
+        <span slot="unsupported" class="fallback">Needs Chrome or Edge on desktop (Web Serial).</span>
+        <span slot="not-allowed" class="fallback">Open this page over https to flash.</span>
+      </esp-web-install-button>
+      <div class="hash">${hash ? "sha256 " + escapeHtml(hash) + "…" : ""}</div>
+    `;
+    return el;
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => (
+      { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+    ));
+  }
+
+  main();
+</script>
+</body>
+</html>
